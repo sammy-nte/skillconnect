@@ -9,7 +9,7 @@ function page() {
       worker: "John Martinez",
       date: "2024-11-08",
       status: "Completed",
-      amount: "$120",
+      amount: "$130",
     },
     {
       id: 2,
