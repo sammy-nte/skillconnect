@@ -1,3 +1,5 @@
+
+
 import Image from "next/image";
 import HomeInput from "../components/HomeInput";
 import * as motion from "motion/react-client";
@@ -11,11 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
+import {Card} from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
+
 export default function Home() {
+
   return (
     <motion.section layoutScroll>
       <motion.section

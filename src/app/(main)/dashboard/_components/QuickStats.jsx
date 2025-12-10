@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import * as motion from "motion/react-client";
 
-function QuickStats() {
+function QuickStats({completed, pending}) {
   const quickStart = {
     visible: {
       opacity: 1,
@@ -27,6 +27,8 @@ function QuickStats() {
       },
     },
   };
+
+  const total = pending + completed
   return (
     <motion.div
       variants={quickStart}
@@ -37,11 +39,11 @@ function QuickStats() {
     >
       <QuickStatsCard
         title="Total Bookings"
-        number={12}
+        number={total}
         icon={<CalendarCheck />}
       />
-      <QuickStatsCard title="Completed" number={9} icon={<SquareCheck />} />
-      <QuickStatsCard title="Pending" number={2} icon={<CalendarClock />} />
+      <QuickStatsCard title="Completed" number={completed} icon={<SquareCheck />} />
+      <QuickStatsCard title="Pending" number={pending} icon={<CalendarClock />} />
       <QuickStatsCard
         title="Avg Rating"
         number={4.8}

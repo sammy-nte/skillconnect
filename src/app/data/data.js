@@ -145,12 +145,12 @@ export const serviceCategories = [
     color: "bg-yellow-100 text-yellow-600",
   },
   {
-    name: "Carpentry",
+    name: "Carpenter",
     icon: "fas fa-hammer",
     color: "bg-amber-100 text-amber-600",
   },
   {
-    name: "Cleaning",
+    name: "Cleaner",
     icon: "fas fa-broom",
     color: "bg-green-100 text-green-600",
   },

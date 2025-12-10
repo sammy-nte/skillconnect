@@ -9,19 +9,17 @@ import Link from "next/link";
 import { CalendarCog, Wrench } from "lucide-react";
 
 export default function Page() {
-  const [bookings, setBooking] = useState([]);
-  const [loadBookings, setLoadBookings] = useState(false);
+  const [requests, setRequests] = useState([]);
+  const [loadRequests, setLoadRequests] = useState(false);
   const [bookingResults, setBookingResults] = useState([]);
 
-
-
   useEffect(() => {
-    async function getBookings() {
+    async function getRequests() {
       try {
-        setLoadBookings(true);
+        setLoadRequests(true);
         const token = sessionStorage.getItem("token");
         const res = await fetch(
-          "https://mod2-backend.onrender.com/api/services/requests",
+          "https://mod2-backend.onrender.com/api/customer/requests/active/",
           {
             method: "GET",
             headers: {
@@ -35,34 +33,31 @@ export default function Page() {
         if (!res.ok) {
           console.error(data);
         }
-        setBooking(data);
-        setBookingResults(data.results);
-        setLoadBookings(false);
+        setRequests(data);
+        setLoadRequests(false);
       } catch (error) {
         console.error(error);
       }
     }
 
-    getBookings();
+    getRequests();
   }, []);
 
-  if (loadBookings || !bookings) {
-    return <Loader loaderText="Loading all bookings" />;
+  if (loadRequests || !requests) {
+    return <Loader loaderText="Loading all requests" />;
   }
-
-  console.log(bookings);
   return (
     <div>
-      {bookings.count == 0 ? (
+      {requests.length === 0 ? (
         <div className="mt-10">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900">My Bookings</h2>
+            <h2 className="text-3xl font-bold text-gray-900">My Requests</h2>
             <Button className="!rounded-button whitespace-nowrap cursor-pointer">
-              Book New Service
+              Make New Request
             </Button>
           </div>
           <p className="font-bold text-center p-10 border-2 border-dashed border-gray-400">
-            You have no booking
+            You have no active requests
           </p>
         </div>
       ) : (
@@ -70,15 +65,15 @@ export default function Page() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold text-gray-900">My Bookings</h2>
             <button className="!rounded-button whitespace-nowrap cursor-pointer">
-              Book New Service
+              Make New Request
             </button>
           </div>
           <Card>
             <CardContent className="p-6">
               <div className="space-y-4">
-                {bookingResults.map((booking) => (
+                {requests.map((request) => (
                   <div
-                    key={booking.id}
+                    key={request.id}
                     className="flex items-center justify-between p-4 border rounded-lg"
                   >
                     <div className="flex items-center space-x-4">
@@ -87,17 +82,17 @@ export default function Page() {
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900">
-                          {booking.category.name}
+                          {request.category.name}
                         </h4>
                         <p className="text-sm text-gray-600">
-                          {booking.worker === null
+                          {request.worker === null
                             ? "Request not accepted yet"
-                            : booking.worker.first_name +
+                            : request.worker.first_name +
                               " " +
-                              booking.worker.last_name}
+                              request.worker.last_name}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {new Date(booking.created_at).toLocaleDateString(
+                          {new Date(request.created_at).toLocaleDateString(
                             "en-GB"
                           )}
                         </p>
@@ -106,27 +101,40 @@ export default function Page() {
                     <div className="flex items-center space-x-4">
                       <Badge
                         variant={
-                          booking.status === "COMPLETED"
+                          request.status === "ACCEPTED"
                             ? "default"
-                            : booking.status === "PENDING"
+                            : request.status === "PENDING"
                             ? "secondary"
                             : "outline"
                         }
+                        className={request.status === ""}
                       >
-                        {booking.status}
+                        {request.status}
                       </Badge>
                       <span className="font-medium text-gray-900">
-                        {/* {booking.amount} */}
+                        {/* {request.amount} */}
                       </span>
-                      <Link href={`/bookings/${booking.id}`}>
-                        <button
-                          variant="outline"
-                          size="sm"
-                          className="rounded-sm border px-3 whitespace-nowrap cursor-pointer"
-                        >
-                          View Details
-                        </button>
-                      </Link>
+                      {request.status === "PENDING" ? (
+                        <Link href={`/requests/${request.id}`}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-sm border px-3 whitespace-nowrap cursor-pointer"
+                          >
+                            View Details
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Link href={`/requests/accepted/${request.id}`}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-sm border px-3 whitespace-nowrap cursor-pointer"
+                          >
+                            View Details
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 ))}
